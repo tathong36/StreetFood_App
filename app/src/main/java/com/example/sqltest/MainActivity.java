@@ -2,6 +2,7 @@ package com.example.sqltest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     // class member variable
     DataBaseHelper dataBaseHelper;
+
+   //The ArrayAdapter fits in between an ArrayList (data source) and the ListView (visual representation) and configures two aspects:
+   //
+   //Which array to use as the data source for the list
+   //How to convert any given item in the array into a corresponding View object
     ArrayAdapter restaurantArrayAdapter;
 
 
@@ -40,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
          dataBaseHelper = new DataBaseHelper(MainActivity.this);
         //no need to send dataBaseHelper as parameter
-         showRestaurantOnListView();
+
 
         //button listeners self contain
         btn_add.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 catch (Exception t){
                     Toast.makeText(MainActivity.this,"Error insert", Toast.LENGTH_SHORT).show();
                 }
-                showRestaurantOnListView();
+
 
 
             }
@@ -77,33 +83,23 @@ public class MainActivity extends AppCompatActivity {
         btn_viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
 
-                // Simple display
-                showRestaurantOnListView();
+
+                //open to a new page to display
+                Intent intent = new Intent(MainActivity.this,ActivityDisplayList.class);
+                startActivity(intent);
+
+
 
                 // Toast.makeText(MainActivity.this, all.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        lv_restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                RestaurantModel clickedRestaurant = (RestaurantModel) adapterView.getItemAtPosition(i); // specify which restaurant position "i" was click
-                dataBaseHelper.deleteOne(clickedRestaurant);
-                showRestaurantOnListView();
-                Toast.makeText(MainActivity.this, "deleted ="+ clickedRestaurant.toString() , Toast.LENGTH_SHORT).show();
 
-
-            }
-        });
 
 
 
     }
 
-    private void showRestaurantOnListView() {
-        restaurantArrayAdapter = new ArrayAdapter<RestaurantModel>(MainActivity.this, android.R.layout.simple_list_item_1, dataBaseHelper.getAll());
-        lv_restaurantList.setAdapter(restaurantArrayAdapter);
-    }
+
 }
